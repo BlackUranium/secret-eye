@@ -1,8 +1,18 @@
 # JS Secret & API Endpoint Finder
 
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+
 Automated tool that crawls a target website's public JavaScript files and hunts for **leaked secrets, API keys, tokens, and hidden internal endpoints**.
 
 Frontend bundles often ship production credentials straight to the browser. This tool detects those leaks using a curated set of regex patterns and reports them per JS file — useful for bug bounty, pentesting, and defensive audits.
+
+Looking for an easy way to **find API keys, auth tokens, and hardcoded credentials left behind in public JavaScript bundles**? Whether you are running bug bounty recon, penetration testing, or a defensive code audit of your own SaaS, `secret-eye` does the heavy lifting automatically — from one URL or a whole list of targets — and saves results you can hand off as a readable `.txt` or JSON report.
+
+## How It Works
+
+1. **Discover** — the tool fetches the target page and collects every referenced `.js` file (`modules/scraper.py`).
+2. **Scan** — each JS file is downloaded and checked against a curated regex library in `patterns.py` (`modules/scanner.py`).
+3. **Report** — findings are grouped by pattern category, printed to the console, and optionally saved to a `.txt` or `.json` report.
 
 ## Features
 
@@ -68,6 +78,13 @@ python main.py -u https://example.com --json -o report.txt
 
 Exactly one of `-u` or `-l` is required.
 
+## Use Cases
+
+- **Bug bounty recon** — scan your target list before writing up findings; leaked keys often expand your attack surface.
+- **Penetration testing** — find hardcoded credentials and internal `/api/` endpoints that reveal backend structure.
+- **SaaS security audits** — verify your own frontend bundles don't leak production `sk_live_` keys, JWTs, or Firebase URLs.
+- **OSINT & exposure checks** — map which secrets are discoverable from any publicly reachable page.
+
 ## Detected Patterns
 
 | Category                    | Example                                   |
@@ -113,10 +130,24 @@ Exactly one of `-u` or `-l` is required.
 [!] Scan complete! Total potential secrets detected: 3
 ```
 
+## FAQ
+
+**Why does it say "No .js files found" even though the site loads scripts?**
+The page may be behind a bot check (Cloudflare, bot management), requires JavaScript to render (SPA), or the HTML only injects scripts via JS. Try pointing the tool at the actual JS/CDN URL directly, or re-run with a larger `timeout`.
+
+**How do I add or tweak detection patterns?**
+Open `patterns.py` and add a new entry to the `PATTERNS` dict — a name and a Python regex string. The scanner picks it up automatically on the next run.
+
+**Why do I see false positives?**
+Regex-based detection is intentionally broad to avoid missing hardcoded secrets that don't follow a strict vendor format. Treat every hit as *potentially sensitive* and verify it manually before reporting it.
+
+**Is this tool safe to run in a lab / CTF?**
+Yes — it only performs unauthenticated GET requests to read public pages and JS files. No exploits, no payloads, no scanning of private pages.
+
 ## Disclaimer
 
 This tool is intended for **security research, bug bounty programs, and defensive audits only**. Only scan targets you own or have explicit authorization to test. The author is not responsible for any misuse.
 
 ## License
 
-MIT
+Distributed under the [MIT License](LICENSE).
