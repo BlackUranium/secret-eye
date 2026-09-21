@@ -1,0 +1,25 @@
+import re
+
+PATTERNS = {
+    "Google API Key": r"AIzaSy[A-Za-z0-9_\-]{33}",
+    "AWS Access Key ID": r"AKIA[0-9A-Z]{16}",
+    "Telegram Bot Token": r"\d{9,10}:[A-Za-z0-9_-]{35}",
+    "JSON Web Token (JWT)": r"eyJ[A-Za-z0-9\-_=]+\.[A-Za-z0-9\-_=]+\.?[A-Za-z0-9\-_.+/=]*",
+    "GitHub Token": r"(?i)\b(?:ghp|gho|ghu|ghs|ghr)_[A-Za-z0-9]{36}\b",
+    "GitHub Fine-Grained Token": r"github_pat_[A-Za-z0-9_]{22,}",
+    "GitLab Private Token": r"glpat-[A-Za-z0-9\-_]{20,}",
+    "Slack Token": r"xox[baprs]-[a-zA-Z0-9\-]{10,40}",
+    "Stripe Secret Key": r"sk_live_[a-zA-Z0-9]{24,}",
+    "Stripe Publishable Key": r"pk_live_[a-zA-Z0-9]{24,}",
+    "SendGrid API Key": r"SG\.[a-zA-Z0-9_-]{16,32}\.[a-zA-Z0-9_-]{16,64}",
+    "Twilio API Key": r"(?i)\bSK[0-9a-fA-F]{32}\b",
+    "Heroku API Key": r"(?i)\bheroku_[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\b",
+    "Mailgun API Key": r"(?i)\bkey-[0-9a-zA-Z]{32}\b",
+    "Square Access Token": r"sq0atp-[0-9A-Za-z\-_]{22}",
+    "Private Key (RSA/EC/OPENSSH)": r"-----BEGIN [A-Z ]*PRIVATE KEY-----",
+    "Firebase Database URL": r"https://[a-zA-Z0-9_-]+\.firebaseio\.com",
+    "npm Registry Auth Token": r"//registry\.npmjs\.org/:_authToken=[a-zA-Z0-9\-]{36}",
+    "Generic API Key/Secret": r"(?i)(api[_-]?key|secret|token|auth|password)\s*[:=]\s*['\"]([a-zA-Z0-9_\-]{16,})['\"]",
+    "Internal/Hidden Endpoint": r"['\"](/(?:api|v[0-9]|admin|auth|user|config)/[a-zA-Z0-9_\-/]+)['\"]",
+    "URL / Staging Domain": r"https?://(?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}(?::\d+)?(?:/[a-zA-Z0-9_.-]*)*",
+}
